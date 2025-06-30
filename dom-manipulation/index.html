@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Quote Generator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        #quoteDisplay {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .quote-text {
+            font-size: 1.5em;
+            font-style: italic;
+            color: #555;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .quote-category {
+            text-align: center;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .category-selector {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .category-selector select {
+            padding: 8px 16px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 1em;
+        }
+
+        /* Server Sync Styles */
+        .sync-container {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .sync-status {
+            display: none;
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            color: white;
+            font-size: 0.9em;
+            z-index: 1001;
+            max-width: 300px;
+            word-wrap: break-word;
+        }
+
+        .sync-info {
+            background-color: #17a2b8;
+        }
+
+        .sync-success {
+            background-color: #28a745;
+        }
+
+        .sync-warning {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        .sync-error {
+            background-color: #dc3545;
+        }
+
+        .sync-button {
+            background-color: #6c757d;
+        }
+
+        .sync-button:hover {
+            background-color: #545b62;
+        }
+
+        .sync-button.syncing {
+            background-color: #ffc107;
+            color: #333;
+            cursor: not-allowed;
+        }
+
+        .last-sync {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .pending-changes {
+            font-size: 0.8em;
+            color: #dc3545;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Dynamic Quote Generator</h1>
+
+    <!-- Server Sync Container -->
+    <div class="sync-container">
+        <h3>🔄 Server Synchronization</h3>
+        <p>Your quotes are automatically synced with the server every 30 seconds.</p>
+        <button id="manualSync" class="sync-button" onclick="manualSync()">Sync Now</button>
+        <div id="lastSyncInfo" class="last-sync">Last sync: Never</div>
+        <div id="pendingChangesInfo" class="pending-changes" style="display: none;">Pending changes: 0</div>
+    </div>
+
+    <div class="category-selector">
+        <label for="categoryFilter">Filter by Category: </label>
+        <select id="categoryFilter" onchange="filterQuotes()">
+            <option value="all">All Categories</option>
+        </select>
+    </div>
+
+    <div id="quoteDisplay">
+        <div class="quote-text">Click "Show New Quote" to get started!</div>
+        <div class="quote-category">Welcome</div>
+    </div>
+
+    <div style="text-align: center;">
+        <button id="newQuote">Show New Quote</button>
+        <button id="toggleForm">Add New Quote</button>
+    </div>
+    <div style="text-align: center; margin-top: 10px;">
+        <button id="exportQuotes">Export Quotes (JSON)</button>
+        <input type="file" id="importFile" accept=".json" style="display:inline-block; margin-left:10px;" />
+    </div>
+
+    <div id="addQuoteForm" class="form-container" style="display: none;">
+        <h3>Add a New Quote</h3>
+        <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
+        <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
+        <button onclick="addQuote()">Add Quote</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
